@@ -14,9 +14,15 @@ importers:
       create-nx-workspace:
         specifier: 19.4.0
         version: 19.4.0
+      ora:
+        specifier: 5.4.1
+        version: 5.4.1
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.6.3
         version: 2.6.3
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
     devDependencies:
       '@nx/eslint':
         specifier: 19.4.0
@@ -54,6 +60,9 @@ importers:
       '@types/node':
         specifier: 18.16.9
         version: 18.16.9
+      '@types/yargs':
+        specifier: ^17.0.32
+        version: 17.0.32
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.3.0
         version: 7.15.0(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -3134,6 +3143,10 @@ packages:
 
   ora@5.3.0:
     resolution: {integrity: sha512-zAKMgGXUim0Jyd6CXK9lraBnD3H5yPGBPPOkC23a2BG6hsm4Zu6OQSjQuEtV0BHDf4aKHcUFvJiGRrFuW3MG8g==}
+    engines: {node: '>=10'}
+
+  ora@5.4.1:
+    resolution: {integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==}
     engines: {node: '>=10'}
 
   os-filter-obj@2.0.0:
@@ -8031,6 +8044,18 @@ snapshots:
       cli-cursor: 3.1.0
       cli-spinners: 2.9.2
       is-interactive: 1.0.0
+      log-symbols: 4.1.0
+      strip-ansi: 6.0.1
+      wcwidth: 1.0.1
+
+  ora@5.4.1:
+    dependencies:
+      bl: 4.1.0
+      chalk: 4.1.2
+      cli-cursor: 3.1.0
+      cli-spinners: 2.9.2
+      is-interactive: 1.0.0
+      is-unicode-supported: 0.1.0
       log-symbols: 4.1.0
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
