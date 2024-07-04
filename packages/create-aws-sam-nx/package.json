@@ -1,0 +1,13 @@
+{
+  "name": "create-aws-sam-nx",
+  "version": "0.0.1",
+  "dependencies": {
+    "create-nx-workspace": "19.4.0"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "bin": {
+    "create-aws-sam-nx": "./bin/index.js"
+  }
+}
