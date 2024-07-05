@@ -1,0 +1,83 @@
+# FIXME: This needs to be updated to use with AWS SAM
+# We need to add sam & git at the minimum
+# Good candidate: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-image-repositories.html
+image: node:<%= nodeVersionMajor %>
+
+definitions:
+  services:
+    docker:
+      memory: 3072
+  steps:
+    - step: &install
+        name: ⚙️ Install
+        script:
+          - npm ci
+        artifacts:
+          - node_modules/**
+    - step: &lint
+        name: 🧹 Lint
+        script:
+          - npm run lint
+          - npm run format
+          - npm run check-types
+    - step: &test
+        name: 🧪 Test
+        script:
+          - npm run test
+    - step: &deploy-temp-stack
+        name: 🏗️ Test Deployment
+        script:
+          # Generate a random three letter stage name that isn't prd or stg
+          - TMP_STAGE=$(cat /dev/urandom | tr -dc 'a-z' | head -c3 | grep -vE 'prd|stg')
+          - echo "Deploy temporary service to stage:\ $TMP_STAGE"
+          # We can replace `latest` with the actual version number by setting the `PIPELINE_VERSION` environment variable
+          - >-
+            npx @aligent/nx-serverless-pipeline@latest
+            --awsAccessKeyId ${AWS_ACCESS_KEY_ID}
+            --awsSecretAccessKey ${AWS_SECRET_ACCESS_KEY}
+            --cfnRole ${CFN_ROLE}
+            --debug ${CI_DEBUG}
+            --stage ${TMP_STAGE}
+          - >-
+            npx @aligent/nx-serverless-pipeline@latest
+            --awsAccessKeyId ${AWS_ACCESS_KEY_ID}
+            --awsSecretAccessKey ${AWS_SECRET_ACCESS_KEY}
+            --cfnRole ${CFN_ROLE}
+            --cmd 'remove'
+            --debug ${CI_DEBUG}
+            --stage ${TMP_STAGE}
+        # artifacts:
+        #   download: false
+    - step: &push-serverless
+        name: 🚀 Deploy Service
+        script:
+          - >-
+            npx @aligent/nx-serverless-pipeline@latest
+            --awsAccessKeyId ${AWS_ACCESS_KEY_ID}
+            --awsSecretAccessKey ${AWS_SECRET_ACCESS_KEY}
+            --cfnRole ${CFN_ROLE}
+            --debug ${CI_DEBUG}
+            --stage ${STAGE}
+            --uploadBadge: 'true'
+            --appUsername ${APP_USERNAME}
+            --appPassword ${APP_PASSWORD}
+
+pipelines:
+  pull-requests:
+    '**':
+      - step: *install
+      - parallel:
+          - step: *test
+          - step: *lint
+          - step: *deploy-temp-stack
+  branches:
+    production:
+      - step:
+          <<: *push-serverless
+          name: 'Deploy Production'
+          deployment: Production
+    staging:
+      - step:
+          <<: *push-serverless
+          name: 'Deploy Staging'
+          deployment: Staging

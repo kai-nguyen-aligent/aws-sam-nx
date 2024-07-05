@@ -60,8 +60,17 @@ async function main() {
         demandOption: true,
         description: 'Set workspace name & directory (normally client name)',
       },
-      nodeVersion: { type: 'string', default: DEFAULT_NODE_VERSION },
-      packageManager: { type: 'string', default: DEFAULT_PACKAGE_MANAGER },
+      nodeVersion: {
+        type: 'string',
+        default: DEFAULT_NODE_VERSION,
+        description: 'Set Nodejs version',
+      },
+      packageManager: {
+        type: 'string',
+        default: DEFAULT_PACKAGE_MANAGER,
+        description: 'Set package manager',
+        choices: ['npm', 'pnpm', 'yarn'],
+      },
     })
     .usage('Usage: $0 --name [name]')
     .showHelpOnFail(false, 'Specify --help for available options')

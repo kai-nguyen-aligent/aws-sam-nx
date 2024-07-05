@@ -1,0 +1,22 @@
+// This file extends the @tsconfig for node<%= nodeVersionMajor %> and strictest.
+// For the full list of compiler options, see: https://github.com/tsconfig/bases
+{
+    "extends": ["@tsconfig/node<%= nodeVersionMajor %>/tsconfig", "@tsconfig/strictest/tsconfig"],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "types": ["node", "vitest", "vitest/globals"],
+        "paths": {
+            "@aligent/serverless-plugin": [
+                "tools/serverless-plugin/src/index.ts"
+            ]
+        }
+    },
+    "exclude": ["node_modules", "tmp"]
+}
