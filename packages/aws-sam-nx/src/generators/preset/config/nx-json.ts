@@ -26,8 +26,7 @@ export const nxJson: NxJsonConfiguration & { $schema: string } = {
     build: {
       dependsOn: ['^build'],
       inputs: ['production', '^production'],
-      // FIXME: this should be for SAM files
-      outputs: ['{projectRoot}/.serverless'],
+      outputs: ['{projectRoot}/.aws-sam'],
       cache: true,
     },
     'check-types': {

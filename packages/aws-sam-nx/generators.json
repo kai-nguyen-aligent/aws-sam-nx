@@ -3,8 +3,13 @@
     "preset": {
       "factory": "./src/generators/preset/generator",
       "schema": "./src/generators/preset/schema.json",
-      "description": "preset generator",
+      "description": "Workspace generator",
       "x-use-standalone-layout": true
+    },
+    "service": {
+      "factory": "./src/generators/service/generator",
+      "schema": "./src/generators/service/schema.json",
+      "description": "Single service generator"
     }
   }
 }
