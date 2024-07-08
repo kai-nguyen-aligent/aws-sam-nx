@@ -5,6 +5,7 @@ import {
   updateJson,
   updateNxJson,
 } from '@nx/devkit';
+import latestVersion from 'latest-version';
 import * as path from 'path';
 import { nxJson } from './config/nx-json';
 import * as packageJson from './config/package.json';
@@ -16,6 +17,18 @@ export async function presetGenerator(
   options: PresetGeneratorSchema
 ) {
   const projectRoot = `.`;
+  const {
+    name,
+    presetVersion,
+    nodeVersionMajor,
+    nodeVersionMinor,
+    packageManager,
+  } = options;
+
+  const packageManagerVersion = await latestVersion(packageManager);
+
+  const tsConfigNodePackageName = `@tsconfig/node${nodeVersionMajor}`;
+  const tsConfigNodeVersion = await latestVersion(tsConfigNodePackageName);
 
   updateJson(tree, '.vscode/extensions.json', () => {
     return { ...vsCodeExtensions };
@@ -25,35 +38,30 @@ export async function presetGenerator(
     ...nxJson,
     generators: {
       '@aligent/aws-sam-nx': {
-        brand: options.name,
-        nodeVersionMajor: options.nodeVersionMajor,
+        brand: name,
+        nodeVersionMajor,
       },
       ...nxJson.generators,
     },
   });
 
-  //TODO: check current the package manager & @tsconfig/nodeXX version https://www.npmjs.com/package/latest-version
-  const packageManagerVersion = `latest`;
-  const tsConfigNodeVersion = `latest`;
-
   updateJson(tree, 'package.json', (json) => {
     json = {
-      name: `@${options.name}/integrations`,
-      description: `${options.name} integrations mono-repository`,
+      name: `@${name}/integrations`,
+      description: `${name} integrations mono-repository`,
       ...packageJson,
     };
-    json.version = options.presetVersion;
+    json.version = presetVersion;
     json.engines = {
-      node: `^${options.nodeVersionMajor}.${options.nodeVersionMinor}.0`,
+      node: `^${nodeVersionMajor}.${nodeVersionMinor}.0`,
     };
-    json.engines[`${options.packageManager}`] = packageManagerVersion;
+    json.engines[`${packageManager}`] = `^${packageManagerVersion}`;
     json.devDependencies = {
-      '@aligent/aws-sam-nx': options.presetVersion,
-      '@aligent/aws-sam-nx-pipeline': options.presetVersion,
+      '@aligent/aws-sam-nx': presetVersion,
+      '@aligent/aws-sam-nx-pipeline': presetVersion,
       ...json.devDependencies,
     };
-    json.devDependencies[`@tsconfig/node${options.nodeVersionMajor}`] =
-      tsConfigNodeVersion;
+    json.devDependencies[tsConfigNodePackageName] = `^${tsConfigNodeVersion}`;
 
     return json;
   });

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "@nx/devkit": "19.4.0",
+    "latest-version": "^9.0.0",
     "tslib": "^2.6.3"
   },
   "type": "commonjs",
