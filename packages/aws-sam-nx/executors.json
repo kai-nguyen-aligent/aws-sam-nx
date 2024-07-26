@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "link": {
+      "implementation": "./src/executors/link/executor",
+      "schema": "./src/executors/link/schema.json",
+      "description": "Executor for service linking"
+    }
+  }
+}

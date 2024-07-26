@@ -6,18 +6,8 @@ import {
   Tree,
 } from '@nx/devkit';
 import * as path from 'path';
+import { buildRunCommandConfig } from '../../utils/targets';
 import { ServiceGeneratorSchema } from './schema';
-
-function buildRunCommandConfig(command: string, dir = '{projectRoot}') {
-  return {
-    executor: 'nx:run-commands',
-    options: {
-      cwd: dir,
-      color: true,
-      command: command,
-    },
-  };
-}
 
 function getTemplateFolder(type: ServiceGeneratorSchema['type'] = 'general') {
   if (type === 'notification') {
